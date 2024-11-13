@@ -1,41 +1,51 @@
-import {Response, Router} from "express";
-import {RequestWithBody, RequestWithUserId} from "../common/types/requests";
-import {LoginInputDto} from "./types/login.input.dto";
-import {authService} from "./auth.service";
-import {routersPaths} from "../common/path/paths";
-import {passwordValidation} from "../users/middlewares/password.validation";
-import {inputValidation} from "../common/validation/input.validation";
-import {loginOrEmailValidation} from "../users/middlewares/login.or.emaol.validation";
-import {accessTokenGuard} from "./guards/access.token.guard";
-import {usersQwRepository} from "../users/user.query.repository";
-import {IdType} from "../common/types/id";
+import { Response, Router } from "express";
+import { RequestWithBody, RequestWithUserId } from "../common/types/requests";
+import { LoginInputDto } from "./types/login.input.dto";
+import { authService } from "./auth.service";
+import { routersPaths } from "../common/path/paths";
+import { passwordValidation } from "../users/middlewares/password.validation";
+import { inputValidation } from "../common/validation/input.validation";
+import { loginOrEmailValidation } from "../users/middlewares/login.or.emaol.validation";
+import { accessTokenGuard } from "./guards/access.token.guard";
+import { usersQwRepository } from "../users/user.query.repository";
+import { IdType } from "../common/types/id";
+import { ResultStatus } from "../common/result/resultCode";
+import { resultCodeToHttpException } from "../common/result/resultCodeToHttpException";
+import { HttpStatuses } from "../common/types/httpStatuses";
 
-export const authRouter = Router()
+export const authRouter = Router();
 
-authRouter.post(routersPaths.auth.login,
-    passwordValidation,
-    loginOrEmailValidation,
-    inputValidation,
-    async (req: RequestWithBody<LoginInputDto>, res: Response) => {
-            const {loginOrEmail, password} = req.body
+authRouter.post(
+  routersPaths.auth.login,
+  passwordValidation,
+  loginOrEmailValidation,
+  inputValidation,
+  async (req: RequestWithBody<LoginInputDto>, res: Response) => {
+    const { loginOrEmail, password } = req.body;
 
-            const accessToken = await authService.loginUser(
-                loginOrEmail,
-                password
-            );
-            if (!accessToken) return res.sendStatus(401);
+    const result = await authService.loginUser(loginOrEmail, password);
 
-            return res.status(200).send({accessToken});
-    })
+    if (result.status !== ResultStatus.Success) {
+      return res
+        .status(resultCodeToHttpException(result.status))
+        .send(result.extensions);
+    }
 
-authRouter.get(routersPaths.auth.me,
-    accessTokenGuard,
-    async (req: RequestWithUserId<IdType>,
-           res: Response) => {
-            const userId = req?.user?.id as string;
+    return res
+      .status(HttpStatuses.Success)
+      .send({ accessToken: result.data!.accessToken });
+  },
+);
 
-            if (!userId) return res.sendStatus(401);
-            const me = await usersQwRepository.findById(userId);
+authRouter.get(
+  routersPaths.auth.me,
+  accessTokenGuard,
+  async (req: RequestWithUserId<IdType>, res: Response) => {
+    const userId = req.user?.id as string;
 
-            return res.status(200).send(me);
-    })
+    if (!userId) return res.sendStatus(HttpStatuses.Unauthorized);
+    const me = await usersQwRepository.findById(userId);
+
+    return res.status(HttpStatuses.Success).send(me);
+  },
+);
