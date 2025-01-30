@@ -1,5 +1,5 @@
 import { usersRepository } from "../infrastructure/user.repository";
-import { bcryptService } from "../../common/adapters/bcrypt.service";
+import { bcryptService } from "../../auth/adapters/bcrypt.service";
 import { IUser } from "../types/user.interface";
 import { CreateUserDto } from "../types/create-user.dto";
 

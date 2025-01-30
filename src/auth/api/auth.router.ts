@@ -1,17 +1,17 @@
 import { Response, Router } from 'express';
-import { RequestWithBody, RequestWithUserId } from '../common/types/requests';
+import { RequestWithBody, RequestWithUserId } from '../../common/types/requests';
 import { accessTokenGuard } from './guards/access.token.guard';
-import { IdType } from '../common/types/id';
-import { ResultStatus } from '../common/result/resultCode';
-import { resultCodeToHttpException } from '../common/result/resultCodeToHttpException';
-import { LoginInputDto } from './types/login.input.dto';
-import { authService } from './auth.service';
-import { routersPaths } from '../common/path/paths';
-import { passwordValidation } from '../users/api/middlewares/password.validation';
-import { inputValidation } from '../common/validation/input.validation';
-import { loginOrEmailValidation } from '../users/api/middlewares/login.or.emaol.validation';
-import { HttpStatuses } from '../common/types/httpStatuses';
-import { usersQwRepository } from '../users/infrastructure/user.query.repository';
+import { IdType } from '../../common/types/id';
+import { ResultStatus } from '../../common/result/resultCode';
+import { resultCodeToHttpException } from '../../common/result/resultCodeToHttpException';
+import { authService } from '../domain/auth.service';
+import { routersPaths } from '../../common/path/paths';
+import { passwordValidation } from '../../users/api/middlewares/password.validation';
+import { inputValidation } from '../../common/validation/input.validation';
+import { loginOrEmailValidation } from '../../users/api/middlewares/login.or.emaol.validation';
+import { HttpStatuses } from '../../common/types/httpStatuses';
+import { usersQwRepository } from '../../users/infrastructure/user.query.repository';
+import { LoginDto } from '../types/login.dto';
 
 export const authRouter = Router();
 
@@ -20,7 +20,7 @@ authRouter.post(
   passwordValidation,
   loginOrEmailValidation,
   inputValidation,
-  async (req: RequestWithBody<LoginInputDto>, res: Response) => {
+  async (req: RequestWithBody<LoginDto>, res: Response) => {
     const { loginOrEmail, password } = req.body;
 
     const result = await authService.loginUser(loginOrEmail, password);
