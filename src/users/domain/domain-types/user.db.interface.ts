@@ -1,4 +1,4 @@
-export interface IUserDB {
+export interface IUser {
     login: string,
     email: string,
     passwordHash: string,

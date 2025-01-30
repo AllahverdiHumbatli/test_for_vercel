@@ -1,9 +1,9 @@
-import {IUserView} from "./types/user.view.interface";
+import {IUserView} from "../api/api-types/user.view.interface";
 import {ObjectId, WithId} from "mongodb";
-import {IUserDB} from "./types/user.db.interface";
-import {IPagination} from "../common/types/pagination";
-import {SortQueryFilterType} from "../common/types/sortQueryFilter.type";
-import {db} from "../db";
+import {IUser} from "../domain/domain-types/user.db.interface";
+import {IPagination} from "../../common/types/pagination";
+import {SortQueryFilterType} from "../../common/types/sortQueryFilter.type";
+import {db} from "../../db";
 
 export const usersQwRepository = {
     async findAllUsers(sortQueryDto: SortQueryFilterType): Promise<IPagination<IUserView[]>> {
@@ -30,11 +30,10 @@ export const usersQwRepository = {
         };
     },
     async findById(id: string): Promise<IUserView | null> {
-        if (!this._checkObjectId(id)) return null;
         const user = await db.getCollections().usersCollection.findOne({_id: new ObjectId(id)});
         return user ? this._getInView(user) : null;
     },
-    _getInView(user: WithId<IUserDB>): IUserView {
+    _getInView(user: WithId<IUser>): IUserView {
         return {
             id: user._id.toString(),
             login: user.login,

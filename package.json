@@ -18,6 +18,7 @@
     "mongodb": "^6.3.0",
     "mongodb-memory-server": "^9.1.4",
     "nodemailer": "^6.9.8",
+    "prettier": "^3.4.2",
     "supertest": "^6.3.3",
     "ts-jest": "^29.1.1"
   },

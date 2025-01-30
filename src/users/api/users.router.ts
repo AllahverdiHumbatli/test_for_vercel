@@ -1,19 +1,20 @@
 import {Response, Router} from "express";
-import {CreateUserInputDto} from "./types/create.user.input.dto";
-import {RequestWithBody, RequestWithParams, RequestWithQuery} from "../common/types/requests";
-import {usersService} from "./user.service";
-import {IUserView} from "./types/user.view.interface";
-import {IdType} from "../common/types/id";
-import {baseAuthGuard} from "../auth/guards/base.auth.guard";
-import {usersQwRepository} from "./user.query.repository";
-import {UsersQueryFieldsType} from "./types/users.queryFields.type";
-import {IPagination} from "../common/types/pagination";
-import {sortQueryFieldsUtil} from "../common/utils/sortQueryFields.util";
-import {pageNumberValidation} from "../common/validation/sorting.pagination.validation";
+import {CreateUserInputDto} from "./api-types/create.user.input.dto";
+import {RequestWithBody, RequestWithParams, RequestWithQuery} from "../../common/types/requests";
+import {usersService} from "../domain/user.service";
+import {IUserView} from "./api-types/user.view.interface";
+import {IdType} from "../../common/types/id";
+import {baseAuthGuard} from "../../auth/guards/base.auth.guard";
+import {usersQwRepository} from "../infrastructure/user.query.repository";
+import {UsersQueryFieldsType} from "./api-types/users.queryFields.type";
+import {IPagination} from "../../common/types/pagination";
+import {sortQueryFieldsUtil} from "../../common/utils/sortQueryFields.util";
+import {pageNumberValidation} from "../../common/validation/sorting.pagination.validation";
 import {emailValidation} from "./middlewares/email.validation";
-import {inputValidation} from "../common/validation/input.validation";
+import {inputValidation} from "../../common/validation/input.validation";
 import {passwordValidation} from "./middlewares/password.validation";
 import {loginValidation} from "./middlewares/login.validation";
+import {HttpStatuses} from "../../common/types/httpStatuses";
 
 export const usersRouter = Router()
 
@@ -53,7 +54,7 @@ usersRouter.post(
         const userId = await usersService.create({login, password, email});
         const newUser = await usersQwRepository.findById(userId);
 
-        return res.status(201).send(newUser!);
+        return res.status(HttpStatuses.Created).send(newUser!);
     }
 );
 

@@ -1,7 +1,7 @@
 import express from "express";
 import {routersPaths} from "./common/path/paths";
 import {authRouter} from "./auth/auth.router";
-import {usersRouter} from "./users/users.router";
+import {usersRouter} from "./users/api/users.router";
 
 export const initApp = () => {
     const app = express()

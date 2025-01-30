@@ -1,6 +1,6 @@
 import {Db, MongoClient} from "mongodb";
 import {appConfig} from "./common/config/config";
-import {IUserDB} from "./users/types/user.db.interface";
+import {IUser} from "./users/domain/domain-types/user.db.interface";
 
 export const db = {
     client: {} as MongoClient,
@@ -40,7 +40,7 @@ export const db = {
     },
     getCollections() {
         return {
-            usersCollection: this.getDbName().collection<IUserDB>("users")
+            usersCollection: this.getDbName().collection<IUser>("users")
             //blogsCollection:
 
             //...all collections
