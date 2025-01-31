@@ -1,6 +1,6 @@
-import { Db, MongoClient } from "mongodb";
-import { appConfig } from "./common/config/config";
-import { IUser } from "./users/types/user.interface";
+import { Db, MongoClient } from 'mongodb';
+import { appConfig } from './common/config/config';
+import { IUserDB } from './users/types/user.db.interface';
 
 export const db = {
   client: {} as MongoClient,
@@ -13,7 +13,7 @@ export const db = {
       this.client = new MongoClient(url);
       await this.client.connect();
       await this.getDbName().command({ ping: 1 });
-      console.log("Connected successfully to mongo server");
+      console.log('Connected successfully to mongo server');
     } catch (e: unknown) {
       console.error("Can't connect to mongo server", e);
       await this.client.close();
@@ -21,7 +21,7 @@ export const db = {
   },
   async stop() {
     await this.client.close();
-    console.log("Connection successful closed");
+    console.log('Connection successful closed');
   },
   async drop() {
     try {
@@ -33,13 +33,13 @@ export const db = {
         await this.getDbName().collection(collectionName).deleteMany({});
       }
     } catch (e: unknown) {
-      console.error("Error in drop db:", e);
+      console.error('Error in drop db:', e);
       await this.stop();
     }
   },
   getCollections() {
     return {
-      usersCollection: this.getDbName().collection<IUser>("users"),
+      usersCollection: this.getDbName().collection<IUserDB>('users'),
       //blogsCollection:
 
       //...all collections

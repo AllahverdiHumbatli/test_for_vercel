@@ -1,6 +1,6 @@
 import { IUserView } from "../types/user.view.interface";
 import { ObjectId, WithId } from "mongodb";
-import { IUser } from "../types/user.interface";
+import { IUserDB } from "../types/user.db.interface";
 import { IPagination } from "../../common/types/pagination";
 import { SortQueryFilterType } from "../../common/types/sortQueryFilter.type";
 import { db } from "../../db";
@@ -39,7 +39,7 @@ export const usersQwRepository = {
       .usersCollection.findOne({ _id: new ObjectId(id) });
     return user ? this._getInView(user) : null;
   },
-  _getInView(user: WithId<IUser>): IUserView {
+  _getInView(user: WithId<IUserDB>): IUserView {
     return {
       id: user._id.toString(),
       login: user.login,

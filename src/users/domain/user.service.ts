@@ -1,6 +1,6 @@
 import { usersRepository } from "../infrastructure/user.repository";
 import { bcryptService } from "../../auth/adapters/bcrypt.service";
-import { IUser } from "../types/user.interface";
+import { IUserDB } from "../types/user.db.interface";
 import { CreateUserDto } from "../types/create-user.dto";
 
 export const usersService = {
@@ -8,7 +8,7 @@ export const usersService = {
     const { login, password, email } = dto;
     const passwordHash = await bcryptService.generateHash(password);
 
-    const newUser: IUser = {
+    const newUser: IUserDB = {
       login,
       email,
       passwordHash,
