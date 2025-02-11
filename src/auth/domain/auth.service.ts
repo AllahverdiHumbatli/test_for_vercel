@@ -2,9 +2,9 @@ import { WithId } from 'mongodb';
 import { Result } from '../../common/result/result.type';
 import { ResultStatus } from '../../common/result/resultCode';
 import { jwtService } from '../adapters/jwt.service';
-import { IUser } from '../../users/types/user.interface';
 import { usersRepository } from '../../users/infrastructure/user.repository';
 import { bcryptService } from '../adapters/bcrypt.service';
+import { IUserDB } from '../../users/types/user.db.interface';
 
 export const authService = {
   async loginUser(
@@ -32,7 +32,7 @@ export const authService = {
   async checkUserCredentials(
     loginOrEmail: string,
     password: string,
-  ): Promise<Result<WithId<IUser> | null>> {
+  ): Promise<Result<WithId<IUserDB> | null>> {
     const user = await usersRepository.findByLoginOrEmail(loginOrEmail);
     if (!user)
       return {
