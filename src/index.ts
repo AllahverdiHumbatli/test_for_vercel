@@ -6,7 +6,7 @@ import {db} from "./db";
 const app = initApp()
 
 app.get('/', (req: Request, res: Response) => {
-    res.send(`Hello user`)
+    res.send(`Hello user!`)
 })
 
 const startApp = async () => {
